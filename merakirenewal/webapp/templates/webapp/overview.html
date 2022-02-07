@@ -1,0 +1,93 @@
+<!-- This login page offers various input field to gather global information like API Keys, 
+    login name or password in advance of starting the demo.-->
+
+    {% extends "webapp/masterPage.html" %}
+
+    {% block content %}
+    <div class="row">
+            <!-- Left Rail -->
+            <div class="col-xl-3 col-md-3">
+            </div>
+    
+            <!-- Middle Rail -->
+            <div class="col-xl-6 col-md-6">
+                <div class="row base-margin-bottom" style="margin-top: 50px;">
+                    <div class="col-xl-8 col-md-8">
+                        <h3 style="display: flex;">License expiration summary for {{deadline}} days</h3>
+                    </div>
+                    <div class="flex flex-right col-xl-4 col-md-4">
+                        <form action="{% url 'download-overview' %}" method="POST" id="csv-form">
+                            {% csrf_token %}
+                            <input type="text" name="partner" hidden value='{{partnerdata}}'>
+                        </form>
+                        <form action="{% url 'download-overview-pdf' %}" method="POST" id="pdf-form">
+                            {% csrf_token %}
+                            <input type="text" name="partner" hidden value="{{partnerdata}}">
+                        </form>
+                        <button type="submit" form="csv-form" style="float: right;" class="btn btn--ghost" onclick="document.getElementById('download-button').click();"><a id="download-button">Export CSV</a></button>
+                        <button type="submit" form="pdf-form" style="float: right;" class="btn btn--ghost" onclick="document.getElementById('download-button-pdf').click();"><a id="download-button-pdf">Export PDF</a></button>
+                    </div>
+                </div>
+                {% for entry in organisations %}
+                <div class="row base-margin-bottom" style="margin-top: 50px;">
+                    <div class="col-xl-12 col-md-12">
+                        <h4 style="display: flex;font-style: italic;">API Key {{ entry.obscuredapikey }}</h4>
+                    </div>
+                </div> 
+                {% if entry.orgs|length > 0 %}
+                {% for org in entry.orgs %}
+                    <div class="panel panel--loose panel--raised base-margin-bottom">
+                        <div class="section"> 
+                            <div class="flex base-margin-left base-margin-right base-margin-bottom" style="flex-direction: column;">
+                                <h4><b>{{org.name}}</b></h4>
+                                <h6 class="page-subtitle">{{org.licensetype}} license status: <span class="label label--{{org.status}}">{{org.statustext}}</span><span></h6>
+                            </div>
+                        </div>
+                        <div class="container-fluid">
+                            <div class="section">
+                                <div class="responsive-table base-margin-right base-margin-bottom">
+                                    <table class="table table--lined table">
+                                        <thead>
+                                            <tr>
+                                                <th class="">SKU</th>
+                                                <th class="">Amount</th>
+                                                <th class="">Renewal date</th>
+                                                <th class="">License Status</th>
+                                                <th class="">End of Sale/Support</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for sku in org.skulist %}
+                                            <tr>
+                                                <td class="">{{sku.SKU}}</td>
+                                                <td class="">{{sku.amount}}</td>
+                                                <td class="">{{sku.datestring}} {% if sku.datestring != 'Not activated' %} ({{sku.timeremaining}} days left) {% endif %}</td>
+                                                <td class=""><span class="label label--{{sku.status}}">{{sku.statustext}}</span></td>
+                                                <td class="">{% for alert in sku.endofsale %}<span class="label label--danger"><a style="color: white;" href="https://documentation.meraki.com/General_Administration/Other_Topics/Product_End-of-Life_(EOL)_Policies" target="_blank">{{ alert }}</a></span>&nbsp;{% endfor %}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% else %}
+                <div class="panel panel--loose panel--raised base-margin-bottom">
+                    <div class="section"> 
+                        <div class="flex base-margin-left base-margin-right base-margin-bottom" style="flex-direction: column;">
+                            <h4><b>No organisations found</b></h4>
+                            <h6 class="page-subtitle">Try using other API keys <a href="{% url 'home' %}">here</a></h6>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+    
+        <!-- Right Rail -->
+        <div class="col-xl-3 col-md-3">
+        </div>
+    </div>
+    {%  endblock %}

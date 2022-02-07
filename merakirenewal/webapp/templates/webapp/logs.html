@@ -1,0 +1,65 @@
+<!-- This login page offers various input field to gather global information like API Keys, 
+    login name or password in advance of starting the demo.-->
+
+    {% extends "webapp/masterPage.html" %}
+
+    {% block content %}
+    <div class="row">
+            <!-- Left Rail -->
+            <div class="col-xl-2 col-md-2">
+            </div>
+    
+            <!-- Middle Rail -->
+            <div class="col-xl-8 col-md-8">
+                <div class="row base-margin-bottom" style="margin-top: 50px;">
+                    <div class="col-xl-8 col-md-8">
+                        <h3 style="display: flex;">Renewal Request Summary</h3>
+                    </div>
+                    <div class="flex flex-right col-xl-4 col-md-4">
+                        <button style="float: right;" class="btn btn--ghost" onclick="document.getElementById('download-button').click();"><a id="download-button" href='/download-logs'>Export as CSV</a></button>
+                        <button style="float: right;" class="btn btn--ghost" onclick="document.getElementById('download-button-pdf').click();"><a id="download-button-pdf" href='/download-logs-pdf'>Export PDF</a></button>
+                    </div>
+                </div>
+                <div class="panel panel--loose panel--raised base-margin-bottom">
+                    <div class="container-fluid">
+                        <div class="section">
+                            <div class="responsive-table base-margin-right base-margin-bottom">
+                                <table class="table table--lined table">
+                                    <thead>
+                                        <tr>
+                                            <th class="">Partner Name</th>
+                                            <th class="">Partner Country</th>
+                                            <th class="">Partner Email</th>
+                                            <th class="">Request Date</th>
+                                            <th class="">Requested Deadline</th>
+                                            <th class="">API Keys</th>
+                                            <th class="">Expired SKUs</th>
+                                            <th class="">Expiring SKUs</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for log in logs %}
+                                        <tr>
+                                            <td class="">{{log.name}}</td>
+                                            <td class="">{{log.country}}</td>
+                                            <td class="">{{log.email}}</td>
+                                            <td class="">{{log.requestdate}}</td>
+                                            <td class="">{{log.requestdeadline}} days</td>
+                                            <td class="">{{log.apikeys}}</td>
+                                            <td class="">{{log.expired}}</td>
+                                            <td class="">{{log.expiring}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+        <!-- Right Rail -->
+        <div class="col-xl-2 col-md-2">
+        </div>
+    </div>
+    {%  endblock %}

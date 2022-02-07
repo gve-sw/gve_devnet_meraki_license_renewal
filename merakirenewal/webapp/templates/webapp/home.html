@@ -1,0 +1,79 @@
+{% extends "webapp/login.html" %}
+
+{% block formfields %}
+
+
+{% if config_error %}
+<div class="alert alert--danger" role="alert">
+    <div class="alert__icon icon-error-outline"></div>
+    <div class="alert__message">
+        <span style="color:var(--cui-theme-danger-darker);">Something went wrong. Please take note of the following points before continuing:</span></br>
+        {% for error in config_error %}
+        <span style="color:var(--cui-theme-danger-darker);font-style: italic;">- {{error}}</span></br>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<h4 class="form-subtitle base-margin-bottom">Partner Information</h4>
+<div class="form-group base-margin-bottom">
+    <div class="form-group__text base-margin-bottom">
+        <label for="name" >Name*</label>
+        <input name="name" type="text" required="">
+    </div>
+    <div class="form-group dropdown base-margin-bottom">
+        <div class="form-group dropdown">
+            <div class="form-group__text select">
+                <label for="country">Country*</label>
+                <input id="country-display" name="country" required="" value="Select a country...">
+            </div>
+            <div class="dropdown__menu" style="max-height:150px;overflow:auto;">
+                {% for country in countries %}
+                <li><a id="listitem-{{country}}" style="height:20px; margin-left: 5px;">
+                    <label class="checkbox">
+                        <input type="checkbox" data-country="{{country}}" onclick="checkCountry(this);" value="{{country}}">
+                        <span class="checkbox__input" hidden></span>
+                        <span class="checkbox__label hidden-xs">{{country}}</span>
+                    </label>
+                </a></li>                                                 
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="form-group__text" style="margin-bottom:5px">
+        <label for="email" >E-mail Address*
+            <span style="display: inline;float: right;" class="page-subtitle">Enter corporate e-mail address</span>
+        </label>
+        <input name="email" type="text" required="">
+    </div>
+    <div class="form-group__text base-margin-bottom">
+        <label class="checkbox">
+            <input type="checkbox" name="send-report">
+            <span class="checkbox__input"></span>
+            <span class="checkbox__label" style="font-style: italic;">Send a report to this e-mail address</span>
+        </label>
+    </div>
+</div></br>
+
+<h4 class="form-subtitle base-margin-bottom">Report Settings</h4>
+<div class="form-group base-margin-bottom">
+    <div class="form-group__text">
+        <label for="api-keys" >Customer API Keys*
+            <span style="display: inline;float: right;" class="page-subtitle">Enter one API key per line</span>
+        </label>
+        <textarea id="api-key-input" name="api-keys" type="text" required="" rows="7"></textarea>
+    </div>
+    <script>
+        var CSRF_TOKEN = '{{ csrf_token }}';
+    </script>
+    <div class="help-block base-margin-bottom" role="alert">
+        <input id="upload" value="" type="file"/>
+        <span data-balloon="In the CSV file, list one API key per line" data-balloon-pos="up"><a href="#" id="upload_link">Import from CSV</a></span>
+    </div>
+    <div class="form-group__text base-margin-bottom">
+        <label for="deadline" >Max. Days until renewal*</label>
+        <input name="deadline" type="number" required="">
+    </div>
+</div>
+
+{% endblock %}

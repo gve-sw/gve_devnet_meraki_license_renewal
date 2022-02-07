@@ -1,0 +1,52 @@
+<!-- This login page offers various input field to gather global information like API Keys, 
+    login name or password in advance of starting the demo.-->
+
+    {% extends "webapp/masterPage.html" %}
+
+    {% block content %}
+
+    {% load static %}
+    <div class="row">
+            <!-- Left Rail -->
+            <div class="col-xl-3 col-md-3">
+            </div>
+    
+            <!-- Middle Rail -->
+            <div class="col-xl-6 col-md-6">
+                <div class="section">
+                    <div class="panel panel--loose panel--raised base-margin-bottom" style="padding:calc(var(--cui-spacing) * 3);padding-left: calc(var(--cui-spacing) * 5);padding-right: calc(var(--cui-spacing) * 5);">
+                        <form action="{% url 'settings' %}" method="POST" name="envVars"> 
+                            {% csrf_token %}
+                            <div class="section"> 
+                                
+                                <!-- OPTIONAL: Replace with Customer Logo -->
+                                <div class="flex flex-center" style="margin-bottom:15px;">
+                                    <img style="max-height: 30px;margin-right: 20px;" id="customer-logo" src="{% static 'webapp/images/cisco-meraki-logo.webp' %}" >
+                                    <h3>License Renewal Tool</h3>
+                                </div>
+                                <div class="flex flex-center" style="margin-bottom:30px;">
+                                    <h6 class="page-subtitle">View all SKUs that require renewal in customer sites within a specific time frame</h6>
+                                </div>
+
+                                {% block formfields %}
+
+                                {% endblock %}
+                                 
+                                <!-- Button area-->
+                                </br><input id="login-submit" onload="showOriginalText('Submit')" onclick="showLoadingText()" style="margin-bottom: 5px;" class="btn btn-primary" type="submit" value="Submit">
+                                </br><span id="loading-info" hidden class="required-label" style="font-style: italic;">We are retrieving your information. This may take a few moments.</span>
+                                </br><span class="required-label pull-right">* required fields</span>
+
+                            </div> 
+
+                        </form>
+    
+                    </div>
+                </div>
+            </div>
+    
+        <!-- Right Rail -->
+        <div class="col-xl-3 col-md-3">
+        </div>
+    </div>
+    {%  endblock %}
